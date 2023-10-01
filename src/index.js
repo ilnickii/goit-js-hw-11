@@ -17,9 +17,10 @@ form.addEventListener('submit', async (e) => {
     page = 1;
     searchQuery = e.target.searchQuery.value.trim();
     if (searchQuery !== '') {
+        hideEndMessage(); 
         await fetchImages();
-        if ( totalHits !== 0){
-        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+        if (totalHits !== 0) {
+            Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
         }
     } else {
         Notiflix.Notify.warning('Please enter a search query.');
@@ -29,7 +30,12 @@ form.addEventListener('submit', async (e) => {
 loadMoreButton.addEventListener('click', async () => {
     page++;
     await fetchImages();
+    hideEndMessage();
 });
+
+function hideEndMessage() {
+    endMessage.style.display = 'none';
+}
 
 async function fetchImages() {
     const apiKey = '39762348-dd965ab637a7eabeb6914620f';
@@ -41,7 +47,7 @@ async function fetchImages() {
 
         const response = await axios.get(apiUrl);
         const data = response.data;
-        
+
         Notiflix.Loading.remove();
 
         if (data.totalHits === 0) {
